@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="jquery-3.3.1.js"></script>
+    <title>Chat App Tutorial Task</title>
+  </head>
+  <body>
+     <div class="container">
+     <br>
+     <div class="jumbotron">
+     <h1 class="display-4">Send Message</h1>
+     <br>
+     <input id ="name" class="form-control" placeholder="Name">
+     <br>
+     <textarea id ="message" class="form-control" placeholder="Your Message Here">
+    </textarea>
+     <br>
+     <button id="send" class="btn btn-success">Send</button>
+     </div>
+     <div id="messages">
+    </div>
+    </div>
+
+    <script>
+
+    $(() => {
+      $("#send").click(()=>{
+        sendMessage({
+          name: $("#name").val(),
+          message:$("#message").val()});
+      })
+        getMessages()
+    });
+
+      function addMessages(message) {
+        $("#messages").append(`
+        <h4> ${message.name} </h4>
+        <p>  ${message.message} </p>`);
+       }
+
+      function getMessages() {
+        $.get('http://localhost:3000/messages', (data) => {
+          data.forEach(addMessages);
+        });
+      }
+
+      function sendMessage(message) {
+        $.post('http://localhost:3000/messages', message);
+      }
+
+  </script>
+  <script src="/node_modules/socket.io-client/dist/socket.io.js">
+
+    var socket = io();
+    socket.on('message', addMessages);
+
+    </script>
+  </body>
+</html>
